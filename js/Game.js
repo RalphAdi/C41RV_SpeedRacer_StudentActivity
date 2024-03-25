@@ -7,6 +7,7 @@ class Game {
 
     this.leader1 = createElement("h2");
     this.leader2 = createElement("h2");
+    this.playerMoving = false;
   }
 
   getState() {
@@ -159,6 +160,11 @@ class Game {
         }
       }
 
+      if (this.playerMoving) {
+        player.positionY += 5;
+        player.update();
+      }
+
       // handling keyboard events
       this.handlePlayerControls();
 
@@ -256,6 +262,7 @@ class Game {
 
   handlePlayerControls() {
     if (keyIsDown(UP_ARROW)) {
+      this.playerMoving = true;
       player.positionY += 10;
       player.update();
     }
@@ -279,6 +286,16 @@ class Game {
       //the event
       collected.remove();
     });
+
+    // Reducing Player car fuel
+    if (player.fuel > 0 && this.playerMoving) {
+      player.fuel -= 0.3;
+    }
+
+    if (player.fuel <= 0) {
+      gameState = 2;
+      this.gameOver();
+    }
   }
 
   handlePowerCoins(index) {
